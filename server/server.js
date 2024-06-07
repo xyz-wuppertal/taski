@@ -26,3 +26,10 @@ const start = async () => {
 }
 
 start()
+
+/*
+
+MONGO_URL = "mongodb+srv://saeed1996oof:saeed1996oof@mui-chart.s8spl3d.mongodb.net/?retryWrites=true&w=majority&appName=MUI-Chart"
+PORT = 8080
+
+*/
