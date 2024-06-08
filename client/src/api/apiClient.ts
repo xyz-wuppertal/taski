@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { type CreateAndEditTask, type AllTasksResponse } from '@/utils/type';
+import { type CreateAndEditTask, type AllTasksResponse, Task } from '@/utils/type';
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -15,4 +15,10 @@ export const CreateTask = async (values: { values: CreateAndEditTask }) => {
 
 export const DeleteTask = async (taskId: string) => {
     await axios.delete<CreateAndEditTask>(`${baseUrl}/tasks/${taskId}`);
+}
+
+export const UpdateTask = async ({ taskId, values }: { taskId: string, values: CreateAndEditTask }): Promise<Task> => {
+    console.log("Task updated")
+    const UpdatedTask = await axios.put<Task>(`${baseUrl}/tasks/${taskId}`, values);
+    return UpdatedTask.data
 }

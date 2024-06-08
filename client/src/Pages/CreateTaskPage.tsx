@@ -1,5 +1,5 @@
 import BreadCrumb from "@/components/BreadCrumb"
-import CreateTaskForm from "@/components/CreateTaskForm"
+import TaskForm from "@/components/TaskForm"
 
 const CreateTaskPage = () => {
     return (
@@ -8,7 +8,7 @@ const CreateTaskPage = () => {
                 <BreadCrumb page="Create Task" />
             </div>
             <div className="px-8">
-                <CreateTaskForm />
+                <TaskForm mode="create" />
             </div>
         </div>
     )

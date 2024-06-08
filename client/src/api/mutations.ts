@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type CreateAndEditTask, } from "@/utils/type"
-import { CreateTask, DeleteTask } from './apiClient';
+import { CreateTask, DeleteTask, UpdateTask } from './apiClient';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'sonner';
 
@@ -31,4 +31,15 @@ export function useDeleteTask() {
             toast.success('Task deleted successfully')
         }
     })
+}
+
+export function useUpdateTask() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (Variable: { taskId: string, values: CreateAndEditTask }) => UpdateTask(Variable),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["tasks"] });
+            toast.success('Task updated successfully');
+        }
+    });
 }

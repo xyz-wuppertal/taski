@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,49 +13,69 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { CreateAndEditTaskSchema, Status, Priority, CreateAndEditTask } from "@/utils/type"
+import { CreateAndEditTaskSchema, Status, Priority, CreateAndEditTask } from "@/utils/type";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { useCreateTask } from "@/api/mutations"
+} from "@/components/ui/select";
+import { useCreateTask, useUpdateTask } from "@/api/mutations";
 import { Loader } from 'lucide-react';
-import { SheetClose } from "./ui/sheet";
+import { Task } from "@/utils/type"
+
 interface TaskFormProps {
     mode: 'create' | 'edit';
+    initialValues?: Partial<Task>;
 }
 
-const CreateTaskForm = ({ mode }: TaskFormProps) => {
-    const { mutate, isPending } = useCreateTask()
+const TaskForm: React.FC<TaskFormProps> = ({ mode, initialValues }) => {
+    const createTask = useCreateTask();
+    const updateTask = useUpdateTask();
     const form = useForm<z.infer<typeof CreateAndEditTaskSchema>>({
         resolver: zodResolver(CreateAndEditTaskSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            priority: Priority.Low,
-            status: Status.Todo,
+            title: initialValues?.title || "",
+            description: initialValues?.description || "",
+            priority: initialValues?.priority || Priority.Low,
+            status: initialValues?.status || Status.Todo,
         }
     });
     const priorities = Object.values(Priority);
     const status = Object.values(Status);
 
+    useEffect(() => {
+        if (initialValues) {
+            form.reset(initialValues);
+        }
+    }, [initialValues, form]);
+
     const onSubmit = (task: CreateAndEditTask) => {
-        mutate(task)
-    }
+        if (mode === "create") {
+            createTask.mutate(task)
+
+        }
+        else {
+            const data = {
+                values: task,
+                taskId: initialValues?._id || ""
+            }
+            updateTask.mutate(data);
+        }
+    };
+
     return (
         <Form {...form}>
             <form
-                className='flex flex-col justify-start gap-10 w-[50%] m-auto pt-10'
+                className={`flex flex-col ${mode === 'edit' ? 'grid grid-cols-2 gap-6' : 'gap-10'} w-[50%] m-auto pt-10`}
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <FormField
                     control={form.control}
                     name='title'
                     render={({ field }) => (
-                        <FormItem className='flex w-full flex-col gap-3'>
+                        <FormItem className='flex flex-col gap-3 col-span-2'>
                             <FormLabel className='text-base-semibold text-light-2'>
                                 Summary
                             </FormLabel>
@@ -73,12 +94,12 @@ const CreateTaskForm = ({ mode }: TaskFormProps) => {
                     control={form.control}
                     name="priority"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className='flex flex-col gap-3'>
                             <FormLabel>Task Priority</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select a verified email to display" />
+                                        <SelectValue placeholder="Select a priority" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -97,12 +118,12 @@ const CreateTaskForm = ({ mode }: TaskFormProps) => {
                     control={form.control}
                     name="status"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Task Stauts</FormLabel>
+                        <FormItem className='flex flex-col gap-3'>
+                            <FormLabel>Task Status</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select a verified email to display" />
+                                        <SelectValue placeholder="Select a status" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -117,12 +138,11 @@ const CreateTaskForm = ({ mode }: TaskFormProps) => {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name='description'
                     render={({ field }) => (
-                        <FormItem className='flex w-full flex-col gap-3'>
+                        <FormItem className='flex flex-col gap-3 col-span-2'>
                             <FormLabel className='text-base-semibold text-light-2'>
                                 Description
                             </FormLabel>
@@ -137,32 +157,21 @@ const CreateTaskForm = ({ mode }: TaskFormProps) => {
                         </FormItem>
                     )}
                 />
-                {mode === "create" ? (
-                    <Button type='submit' className="text-base">
-                        {renderButtonContent(isPending, mode)}
+                <div className='col-span-2'>
+                    <Button type='submit' className="text-base w-full">
+                        {createTask.isPending || updateTask.isPending ? (
+                            <>
+                                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                Please wait
+                            </>
+                        ) : (
+                            mode === 'create' ? 'Create Task' : 'Edit Task'
+                        )}
                     </Button>
-                ) : (
-                    <SheetClose asChild>
-                        <Button type='submit' className="text-base">
-                            {renderButtonContent(isPending, mode)}
-                        </Button>
-                    </SheetClose>
-                )}
-
-
+                </div>
             </form>
-        </Form>)
-}
-export default CreateTaskForm
+        </Form>
+    );
+};
 
-
-const renderButtonContent = (isPending: boolean, mode: 'create' | 'edit') => (
-    isPending ? (
-        <>
-            <Loader className="mr-2 h-4 w-4 animate-spin" />
-            Please wait
-        </>
-    ) : (
-        mode === 'create' ? 'Create Task' : 'Edit Task'
-    )
-);
+export default TaskForm;

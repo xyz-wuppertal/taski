@@ -3,14 +3,13 @@ import * as z from 'zod';
 
 
 export interface Task {
-    _id: string;
     title: string;
     description: string;
-    priority: string;
-    status: string;
+    priority: Priority;
+    status: Status;
     createdAt?: string;
     updatedAt?: string;
-    __v: number;
+    _id: string;
 }
 
 interface GroupedTasks {

@@ -3,6 +3,7 @@ import { groupBy } from '../utils/tasksGroupBy.js'
 
 const createTask = async (req, res, next) => {
   const { values } = req.body
+  console.log(values.status)
   const createTask = await Task.create(values)
   res.json(createTask)
 }
@@ -43,4 +44,28 @@ const deleteTask = async (req, res) => {
   res.json('Task deleted')
 }
 
-export { createTask, getAllTasks, deleteTask }
+const editTask = async (req, res) => {
+  try {
+    const taskId = req.params.taskId
+    const task = await Task.findById(taskId)
+
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' })
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(taskId, req.body, {
+      new: true,
+    })
+
+    if (!updatedTask) {
+      return res.status(500).json({ message: 'Error updating task' })
+    }
+
+    return res.status(200).json(updatedTask)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Server error' })
+  }
+}
+
+export { createTask, getAllTasks, deleteTask, editTask }

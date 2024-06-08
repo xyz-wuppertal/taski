@@ -9,7 +9,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+    Sheet,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 import { useDeleteTask } from "@/api/mutations";
+
+import EditSheet from "./EditSheet";
 
 function KanbanBoard() {
     const { data, isLoading, isError } = useFetchTasks();
@@ -60,7 +66,8 @@ function KanbanBoard() {
                             {getStatusIcon(statusGroup._id)}
                         </h2>
                         <div className="space-y-4">
-                            {statusGroup.tasks.map((task) => (
+                            {statusGroup.tasks.map((task) =>
+                            (
                                 <div
                                     key={task._id}
                                     className="bg-white dark:bg-gray-950 rounded-lg p-4 shadow-sm flex items-center justify-between"
@@ -71,18 +78,28 @@ function KanbanBoard() {
                                         <span className="font-medium">{task.title}</span>
                                     </div>
                                     <div className="flex items-center space-x-3">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger>                                            <GripIcon className="h-4 w-4" />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>Task Name</DropdownMenuLabel>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => deleteTask.mutate(task._id)}>Edit
+                                        <Sheet>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger>                                            <GripIcon className="h-4 w-4" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>{task.title}</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <SheetTrigger className="w-full">
+                                                        <DropdownMenuItem>
 
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => deleteTask.mutate(task._id)}>Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                            Edit
+                                                        </DropdownMenuItem>
+                                                    </SheetTrigger>
+
+
+                                                    <DropdownMenuItem onClick={() => deleteTask.mutate(task._id)}>Delete</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+
+                                            <EditSheet task={task} />
+                                        </Sheet>
+
                                     </div>
                                 </div>
                             ))}
