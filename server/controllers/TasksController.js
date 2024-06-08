@@ -2,7 +2,8 @@ import Task from '../models/TaskModels.js'
 import { groupBy } from '../utils/tasksGroupBy.js'
 
 const createTask = async (req, res, next) => {
-  const createTask = await Task.create(req.body)
+  const { values } = req.body
+  const createTask = await Task.create(values)
   res.json(createTask)
 }
 
@@ -35,4 +36,11 @@ const getAllTasks = async (req, res, next) => {
   })
 }
 
-export { createTask, getAllTasks }
+const deleteTask = async (req, res) => {
+  const task = await Task.findById(req.params.taskId)
+  if (!task) res.json('Task not found')
+  await task.deleteOne()
+  res.json('Task deleted')
+}
+
+export { createTask, getAllTasks, deleteTask }

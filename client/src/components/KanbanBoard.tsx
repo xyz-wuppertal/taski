@@ -1,11 +1,19 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import { useFetchTasks } from "@/api/querys";
 import { CircleCheckIcon, GripIcon, LoaderIcon, SquareCheckIcon, CodeReviewIcon, TestingIcon } from "@/constants/icons/KanbanBoardIcon";
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useDeleteTask } from "@/api/mutations";
 
 function KanbanBoard() {
     const { data, isLoading, isError } = useFetchTasks();
+    const deleteTask = useDeleteTask()
     const statusCategories = ["Todo", "Doing", "Code Review", "Testing", "Done"];
     if (isLoading) {
         return <div>Loading...</div>;
@@ -63,9 +71,18 @@ function KanbanBoard() {
                                         <span className="font-medium">{task.title}</span>
                                     </div>
                                     <div className="flex items-center space-x-3">
-                                        <Button variant="ghost" size="icon">
-                                            <GripIcon className="h-4 w-4" />
-                                        </Button>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>                                            <GripIcon className="h-4 w-4" />
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuLabel>Task Name</DropdownMenuLabel>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem onClick={() => deleteTask.mutate(task._id)}>Edit
+
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => deleteTask.mutate(task._id)}>Delete</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </div>
                                 </div>
                             ))}

@@ -15,12 +15,12 @@ const TaskSchema = new Schema(
     priority: {
       type: String,
       enum: ['Low', 'Medium', 'High'],
-      default: 'low',
+      default: 'Low',
     },
     status: {
       type: String,
-      enum: ['Todo', 'Doing', 'Done'],
-      default: 'todo',
+      enum: ['Todo', 'Doing', 'Code Review', 'Testing', 'Done'],
+      default: 'Todo',
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }

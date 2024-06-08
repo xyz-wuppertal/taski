@@ -30,6 +30,8 @@ export enum Status {
     Todo = "Todo",
     Doing = "Doing",
     Done = "Done",
+    CodeReview = "Code Review",
+    Testing = "Testing",
 }
 
 export enum Priority {

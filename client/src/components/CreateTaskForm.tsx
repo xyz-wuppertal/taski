@@ -20,9 +20,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { useCreateTask } from "@/api/mutations"
+import { Loader } from 'lucide-react';
 
 const CreateTaskForm = () => {
-
+    const { mutate, isPending } = useCreateTask()
     const form = useForm<z.infer<typeof CreateAndEditTaskSchema>>({
         resolver: zodResolver(CreateAndEditTaskSchema),
         defaultValues: {
@@ -36,7 +38,7 @@ const CreateTaskForm = () => {
     const status = Object.values(Status);
 
     const onSubmit = (task: CreateAndEditTask) => {
-        console.log(task)
+        mutate(task)
     }
     return (
         <Form {...form}>
@@ -133,8 +135,17 @@ const CreateTaskForm = () => {
                 />
 
                 <Button type='submit' className="text-base">
-                    Create Task
+
+                    {isPending ? (
+                        <>
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                            Please wait
+                        </>
+                    ) : (
+                        'create Task'
+                    )}
                 </Button>
+
             </form>
         </Form>)
 }
