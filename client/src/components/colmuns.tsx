@@ -1,11 +1,7 @@
-
-import {
-    ColumnDef,
-} from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,17 +9,13 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { Task } from "@/utils/type";
 
+const statusOrder = ["Todo", "Doing", "Done", "Code Review", "Testing"];
+const priorityOrder = ["high", "medium", "low"];
 
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Task>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -47,47 +39,61 @@ export const columns: ColumnDef<Payment>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "status",
-        header: "Status",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("status")}</div>
+        accessorKey: "title",
+        header: "Title",
+        cell: ({ row }) => <div className="capitalize">{row.getValue("title")}</div>,
+        enableSorting: false,
+
+    },
+    {
+        accessorKey: "description",
+        header: "Description",
+        cell: ({ row }) => <div>{row.getValue("description")}</div>,
+        enableSorting: false,
+    },
+    {
+        accessorKey: "priority",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Priority
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
         ),
-    },
-    {
-        accessorKey: "email",
-        header: ({ column }) => {
+        cell: ({ row }) => <div className="capitalize">{row.getValue("priority")}</div>,
+        sortingFn: (rowA, rowB) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
+                priorityOrder.indexOf(rowA.getValue("priority")) -
+                priorityOrder.indexOf(rowB.getValue("priority"))
+            );
         },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
     },
     {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-
-            return <div className="text-right font-medium">{formatted}</div>
+        accessorKey: "status",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Status
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
+        sortingFn: (rowA, rowB) => {
+            return (
+                statusOrder.indexOf(rowA.getValue("status")) -
+                statusOrder.indexOf(rowB.getValue("status"))
+            );
         },
     },
     {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const payment = row.original
+            const task = row.original;
 
             return (
                 <DropdownMenu>
@@ -100,16 +106,15 @@ export const columns: ColumnDef<Payment>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                            onClick={() => navigator.clipboard.writeText(task._id)}
                         >
-                            Copy payment ID
+                            Copy task ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
+                        <DropdownMenuItem>View task details</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            )
+            );
         },
     },
-]
+];

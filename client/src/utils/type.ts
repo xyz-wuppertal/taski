@@ -21,6 +21,7 @@ interface GroupedTasks {
 export interface AllTasksResponse {
     GroupByStatus: GroupedTasks[];
     GroupByPriority: GroupedTasks[];
+    tasks: Task[]
 }
 
 

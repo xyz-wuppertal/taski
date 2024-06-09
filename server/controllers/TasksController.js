@@ -26,7 +26,7 @@ const getAllTasks = async (req, res, next) => {
       {}
     )
     res.json(groupedTasksResponse) */
-  const tasks = await Task.find({})
+  const tasks = await Task.find({}).sort({ createdAt: 1 })
   if (!tasks) res.json('No Tasks found')
 
   const GroupByStatus = Object.values(groupBy(tasks, 'status'))
@@ -34,6 +34,7 @@ const getAllTasks = async (req, res, next) => {
   res.json({
     GroupByStatus,
     GroupByPriority,
+    tasks,
   })
 }
 

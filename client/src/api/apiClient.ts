@@ -18,7 +18,6 @@ export const DeleteTask = async (taskId: string) => {
 }
 
 export const UpdateTask = async ({ taskId, values }: { taskId: string, values: CreateAndEditTask }): Promise<Task> => {
-    console.log("Task updated")
     const UpdatedTask = await axios.put<Task>(`${baseUrl}/tasks/${taskId}`, values);
     return UpdatedTask.data
 }

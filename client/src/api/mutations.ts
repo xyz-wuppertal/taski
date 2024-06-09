@@ -15,7 +15,7 @@ export function useCreateTask() {
             })
             toast.success('Task created successfully')
 
-            navigate("/")
+            navigate("/kanban")
         }
     })
 }
@@ -40,6 +40,9 @@ export function useUpdateTask() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
             toast.success('Task updated successfully');
+        },
+        onError: () => {
+            toast.error('Something went wrong');
         }
     });
 }
