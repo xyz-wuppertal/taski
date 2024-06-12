@@ -1,3 +1,4 @@
+import React from "react";
 import {
     ColumnFiltersState,
     SortingState,
@@ -9,7 +10,6 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
 import { Input } from "./ui/input";
 import {
     DropdownMenu,
@@ -27,8 +27,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { columns } from "@/components/colmuns";
 import { useFetchTasks } from "@/api/querys";
+import { columns } from "@/components/colmuns";
 
 export function TasksTable() {
     const { data } = useFetchTasks();
@@ -39,7 +39,7 @@ export function TasksTable() {
     const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
-        data: data?.tasks ?? [], // Use an empty array if data.tasks is undefined
+        data: data?.tasks ?? [],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -56,7 +56,6 @@ export function TasksTable() {
             rowSelection,
         },
     });
-    console.log(table.getRowModel().rows.map(row => row._valuesCache))
 
     return (
         <div className="w-full p-6">

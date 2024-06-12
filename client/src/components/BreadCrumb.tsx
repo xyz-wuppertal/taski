@@ -9,14 +9,18 @@ import {
 } from "@/components/ui/breadcrumb"
 
 
-const BreadCrumb = ({ page, }: { page: string }) => {
+const BreadCrumb = ({ page }: { page?: string }) => {
     return (
         <Breadcrumb >
             <BreadcrumbList className="text-xl">
                 <BreadcrumbItem>
                     <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator />
+                {
+                    page && ( 
+                        <BreadcrumbSeparator />
+                    )
+                }
                 <BreadcrumbItem>
                     <BreadcrumbPage>{page}</BreadcrumbPage>
                 </BreadcrumbItem>

@@ -12,9 +12,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Task } from "@/utils/type";
 
-const statusOrder = ["Todo", "Doing", "Done", "Code Review", "Testing"];
-const priorityOrder = ["high", "medium", "low"];
+const statusOrder = ["Todo", "Doing", "Code Review", "Testing" , "Done"];
+const prioritySort = (rowA: any, rowB: any): number => {
+    const value = (A: string): number => {
+      return A === "Low" ? 1 : A === "Medium" ? 2 : 3;
+    };
 
+    const Anum = value(rowA.original.priority);
+    const Bnum = value(rowB.original.priority);
+
+    if (Anum === Bnum) return 0;
+
+    return Anum < Bnum ? 1 : -1;
+  }
 export const columns: ColumnDef<Task>[] = [
     {
         id: "select",
@@ -43,7 +53,6 @@ export const columns: ColumnDef<Task>[] = [
         header: "Title",
         cell: ({ row }) => <div className="capitalize">{row.getValue("title")}</div>,
         enableSorting: false,
-
     },
     {
         accessorKey: "description",
@@ -63,12 +72,8 @@ export const columns: ColumnDef<Task>[] = [
             </Button>
         ),
         cell: ({ row }) => <div className="capitalize">{row.getValue("priority")}</div>,
-        sortingFn: (rowA, rowB) => {
-            return (
-                priorityOrder.indexOf(rowA.getValue("priority")) -
-                priorityOrder.indexOf(rowB.getValue("priority"))
-            );
-        },
+        sortingFn:(rowA, rowB) => { return prioritySort(rowA , rowB)}
+
     },
     {
         accessorKey: "status",
@@ -108,7 +113,7 @@ export const columns: ColumnDef<Task>[] = [
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(task._id)}
                         >
-                            Copy task ID
+                                                     Copy task ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>View task details</DropdownMenuItem>
@@ -118,3 +123,5 @@ export const columns: ColumnDef<Task>[] = [
         },
     },
 ];
+
+                       

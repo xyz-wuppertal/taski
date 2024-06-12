@@ -38,7 +38,7 @@ const KanbanPage = () => {
                 <div className="text-4xl sticky top-0 z-[10] p-6 bg-background/50 backdrop-blur-lg flex items-center border-b">
                     <BreadCrumb page="Kanban Board" />
                 </div>
-                <Heading title={"Kanban"} isTable={isTable} setIsTable={setIsTable} tooltip={
+                <Heading description ="Manage tasks by dnd" btn = {"Add New Todo"} title={"Kanban"} isTable={isTable} setIsTable={setIsTable} tooltip={
                     isTable ? "Switch to Kanban Mode" : "Switch to Table Mode"
                 } />
                 {
