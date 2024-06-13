@@ -68,5 +68,16 @@ const editTask = async (req, res) => {
     return res.status(500).json({ message: 'Server error' })
   }
 }
+const getSingeTaskById = async (req, res, next) => {
+  const {taskId} = req.params;
+  if(!taskId) { 
+    return res.status(400).json({ message: 'taskId is required' });
+  }
+  const task = await Task.findById(taskId);
+  if(!task) {
+    return res.status(404).json({ message: 'Task not found' });
+  }
+  res.json(task);
+}
 
-export { createTask, getAllTasks, deleteTask, editTask }
+export { createTask, getAllTasks, deleteTask, editTask , getSingeTaskById }

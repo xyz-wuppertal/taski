@@ -3,6 +3,7 @@ import DashboardPage from "./Pages/DashboardPage"
 import CreateTaskPage from "./Pages/CreateTaskPage"
 import Layout from "./components/Layout"
 import KanbanPage from "./Pages/KanbanPage"
+import SingleTaskPage from "./Pages/SingleTaskPage"
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
             {
                 path: "kanban",
                 element: <KanbanPage />
+            },
+            {
+                path: "task/:taskId",
+                element: <SingleTaskPage />
             }
         ]
     },

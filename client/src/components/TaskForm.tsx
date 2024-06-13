@@ -68,7 +68,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ mode, initialValues }) => {
     return (
         <Form {...form}>
             <form
-                className={`flex flex-col ${mode === 'edit' ? 'grid grid-cols-2 gap-6' : 'gap-10'} w-[50%] m-auto pt-10`}
+                className={`flex flex-col ${mode === 'edit' ? 'grid grid-cols-2 gap-6 w-[80%]' : 'gap-10'} w-[50%] m-auto pt-10`}
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <FormField

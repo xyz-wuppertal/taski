@@ -21,3 +21,8 @@ export const UpdateTask = async ({ taskId, values }: { taskId: string, values: C
     const UpdatedTask = await axios.put<Task>(`${baseUrl}/tasks/${taskId}`, values);
     return UpdatedTask.data
 }
+
+export const fetchSingleTaskById = async (taskId: string): Promise<Task> => { 
+    const { data } = await axios.get<Task>(`${baseUrl}/tasks/${taskId}`);
+    return data;
+}
